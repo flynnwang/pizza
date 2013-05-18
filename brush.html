@@ -17,8 +17,8 @@
                 <div class="toolbar">
                     <div class="btn-group" data-toggle="buttons-radio">
                         <button class="btn text-btn">添加文字</button>
-                        <button class="btn brush-btn">画笔</button>
-                        <button class="btn paint-btn">着色</button>
+                        <button class="btn hide brush-btn">画笔</button>
+                        <button class="btn hide paint-btn">着色</button>
                     </div>
                     <div class="btn-group size-group" data-toggle="buttons-radio">
                        <button class="size btn" data-font-size="40" data-stroke-width="24">大</button> 
@@ -26,10 +26,10 @@
                        <button class="size btn" data-font-size="15" data-stroke-width="5">小</button> 
                     </div>
                     <div class="btn-group color-group" data-toggle="buttons-radio"></div>
-                    <div class="btn-group util-group" data-toggle="buttons-radio">
-                        <button class="btn reset-btn">重置</a>
-                        <button data-loading-text="保存中..." class="btn save-btn">保存</button >
-                        <button class="btn hide download-btn">下载</button >
+                    <div class="btn-group util-group">
+                        <button class="btn reset-btn">重置</button>
+                        <button data-loading-text="保存中..." class="btn save-btn">保存</button>
+                        <a class="btn disabled download-btn">下载</a>
                     </div>
                 </div>
                 <div id="pizza"></div>
@@ -55,7 +55,6 @@
         <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
         <script src="/js/bootstrap.js"></script>
         <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.5.1.min.js"></script>
-        <!--<script src="/js/pizza.js"></script>-->
         <script type="text/javascript" src="/js/p.js"></script>
     </body>
 </html>

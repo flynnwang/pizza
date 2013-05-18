@@ -2,6 +2,10 @@
 document.onselectstart = () ->
   false
 
+`function getURLParameter(name) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+}`
+
 newBrushPizza = (stage) ->
   layer = new Kinetic.Layer(id: "background")
   circle = new Kinetic.Circle(
@@ -25,6 +29,7 @@ newBrushPizza = (stage) ->
   layer
 
 cookPaintPizza = (stage, layer, toolbar) ->
+
   days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
   [cx, cy, R] = [stage.getWidth() / 2, stage.getHeight() / 2, 235]
   for i in [0..6]
@@ -44,7 +49,6 @@ cookPaintPizza = (stage, layer, toolbar) ->
           if toolbar.currentTool is "paint"
             w.setFill(toolbar.color)
             layer.draw()
-            console.log(toolbar.color)
       _
     _paint(wedge)()
     layer.add(wedge)
@@ -58,10 +62,6 @@ cookPaintPizza = (stage, layer, toolbar) ->
       fontSize: 16
       rotationDeg: 360 - angle - 14
     )
-    #text.setZIndex 100
-    #console.log days[i]
-    #console.log text.getHeight()
-    #console.log text.getWidth()
     layer.add(text)
   layer.draw()
 
@@ -194,7 +194,7 @@ class Toolbar
         $('.download-btn')
           .attr('href', url)
           .attr('download', "#{window.document.title}.png")
-          .show()
+          .removeClass 'disabled'
         save.button('reset')
       mimeType: "image/png"
     )
@@ -203,6 +203,9 @@ class Toolbar
     console.log "@#{at}: tool: #{@currentTool}, brushing: #{@brushing} with color #{@color}"
 
 $ ->
+  showFillTool = getURLParameter('fill')
+  console.log(showFillTool)
+
   drawText = (@i) ->
     txt = @i.val()
     toolbar.text(txt) if txt.trim()
@@ -213,8 +216,12 @@ $ ->
     width: 1000
     height: 500
   )
-  #pizza = newBrushPizza(stage)
-  pizza = new Kinetic.Layer(id: "background")
+  if showFillTool
+    $('.paint-btn').removeClass('hide')
+    pizza = new Kinetic.Layer(id: "background")
+  else
+    $('.brush-btn').removeClass('hide')
+    pizza = newBrushPizza(stage)
 
   toolbar = new Toolbar(
     $container: $('#pizza')
@@ -225,7 +232,8 @@ $ ->
     strokeWidth: 6
   )
 
-  cookPaintPizza(stage, pizza, toolbar)
+  if showFillTool
+    cookPaintPizza(stage, pizza, toolbar)
 
   dialog = $('#text-dialog').on('shown', ->
     userInput.val '' 

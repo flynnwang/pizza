@@ -6,6 +6,10 @@
     return false;
   };
 
+  function getURLParameter(name) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+};
+
   newBrushPizza = function(stage) {
     var center, circle, layer;
 
@@ -56,8 +60,7 @@
           return w.on("mousedown", function() {
             if (toolbar.currentTool === "paint") {
               w.setFill(toolbar.color);
-              layer.draw();
-              return console.log(toolbar.color);
+              return layer.draw();
             }
           });
         };
@@ -280,7 +283,7 @@
       save.button('loading');
       return this.stage.toDataURL({
         callback: function(url) {
-          $('.download-btn').attr('href', url).attr('download', "" + window.document.title + ".png").show();
+          $('.download-btn').attr('href', url).attr('download', "" + window.document.title + ".png").removeClass('disabled');
           return save.button('reset');
         },
         mimeType: "image/png"
@@ -299,8 +302,10 @@
   })();
 
   $(function() {
-    var dialog, drawText, pizza, stage, toolbar, userInput;
+    var dialog, drawText, pizza, showFillTool, stage, toolbar, userInput;
 
+    showFillTool = getURLParameter('fill');
+    console.log(showFillTool);
     drawText = function(i) {
       var txt;
 
@@ -316,9 +321,15 @@
       width: 1000,
       height: 500
     });
-    pizza = new Kinetic.Layer({
-      id: "background"
-    });
+    if (showFillTool) {
+      $('.paint-btn').removeClass('hide');
+      pizza = new Kinetic.Layer({
+        id: "background"
+      });
+    } else {
+      $('.brush-btn').removeClass('hide');
+      pizza = newBrushPizza(stage);
+    }
     toolbar = new Toolbar({
       $container: $('#pizza'),
       stage: stage,
@@ -327,7 +338,9 @@
       fontSize: 25,
       strokeWidth: 6
     });
-    cookPaintPizza(stage, pizza, toolbar);
+    if (showFillTool) {
+      cookPaintPizza(stage, pizza, toolbar);
+    }
     dialog = $('#text-dialog').on('shown', function() {
       userInput.val('');
       return userInput.focus();
