@@ -45,8 +45,12 @@
 }
 
 #painting {
-    canvas:active, canvas:focus {
+    &.paint canvas {
         cursor: url('/img/draw_circle.png') 14 14, auto;
+        
+    }
+    &.text canvas {
+        cursor: url('/img/cursor_text.png') 8 8, auto;
     }
 }
 
@@ -62,7 +66,7 @@
         float: none;
     }
 
-    .color-group { 
+    .color-group, .size-group { 
         .btn {
             .border-right-radius(0);
             .border-left-radius(0);
