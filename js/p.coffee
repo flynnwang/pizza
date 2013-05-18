@@ -24,6 +24,38 @@ newBrushPizza = (stage) ->
   layer.add(center)
   layer
 
+newPaintPizza = (stage) ->
+  layer = new Kinetic.Layer(id: "background")
+  days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+  cx = stage.getWidth() / 2
+  cy = stage.getHeight() / 2
+  R = 235
+  for i in [0..6]
+    angle = i * (360/7)
+    angleText = angle + 5
+    layer.add(new Kinetic.Wedge(
+      x: cx
+      y: cy
+      radius: R
+      angleDeg: 360/7
+      stroke: "black"
+      strokeWidth: 4
+      rotationDeg: angle
+    ))
+    text = new Kinetic.Text(
+      x: cx + (R - 15 - 12) * Math.sin((angle + 5) / 180 * Math.PI)
+      y: cy + (R - 15 - 24)* Math.cos((angle + 5) / 180 * Math.PI)
+      text: days[6-i]
+      fill: "black"
+      fontSize: 22
+      rotationDeg: 360 - angle - 10
+    )
+    console.log days[i]
+    console.log text.getHeight()
+    console.log text.getWidth()
+    layer.add(text)
+  layer
+
 class Toolbar
   constructor: (options) ->
     {@$container, @stage, @background, @color, @fontSize, @strokeWidth} = options
@@ -169,7 +201,8 @@ $ ->
     width: 1000
     height: 500
   )
-  pizza = newBrushPizza(stage)
+  #pizza = newBrushPizza(stage)
+  pizza = newPaintPizza(stage)
 
   toolbar = new Toolbar(
     $container: $('#pizza')
