@@ -1,8 +1,5 @@
-#COLORS = ["#f00", "#ff0", "#0f0", "#0ff", "#00f", "#f0f", "#000", "#fff"]
-COLORS = ["1c39f6", "ff43f7", "61fbb1", "d31710", "00306f", "0086c7", "884aaa", "ff7a29", "fefa51", "00ba6d", "00bfef", "ff1f17", "000", "fff"]
-document.onselectstart = () -> false
 $ ->
-  $.each COLORS, ->
+  $.each window.C.COLORS, ->
     color = "##{this}"
     a = """<button class="color btn" data-color="#{color}" style="background: #{color};"></button>"""
     $(".tools .color-group").append a
@@ -27,7 +24,6 @@ $ ->
 
   $(".color").click (evt) ->
     color = $(this).attr "data-color"
-    tool = "paint"
 
   clearCanvas = ->
     stage.clear
@@ -99,8 +95,10 @@ $ ->
     oldXY = cur
 
   # text painting
-  dialog = $('#text-dialog')
   userInput = $('#user-input')
+  dialog = $('#text-dialog').on('shown', () ->
+    userInput.focus()
+  )
   paintText = () ->
     text = new Kinetic.Text(
       x: textXY.x
@@ -132,7 +130,7 @@ $ ->
     stage.toDataURL(
       callback: (url) =>
         $('#download-btn').attr('href', url)
-        $('#download-btn').attr('download', 'a.jpg')
+        $('#download-btn').attr('download', "#{window.document.title}.png")
         $(this).button('reset')
         $('#download-btn').show()
         console.log url
