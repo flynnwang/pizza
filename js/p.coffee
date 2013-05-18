@@ -24,16 +24,12 @@ newBrushPizza = (stage) ->
   layer.add(center)
   layer
 
-newPaintPizza = (stage) ->
-  layer = new Kinetic.Layer(id: "background")
+cookPaintPizza = (stage, layer, toolbar) ->
   days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-  cx = stage.getWidth() / 2
-  cy = stage.getHeight() / 2
-  R = 235
+  [cx, cy, R] = [stage.getWidth() / 2, stage.getHeight() / 2, 235]
   for i in [0..6]
     angle = i * (360/7)
-    angleText = angle + 5
-    layer.add(new Kinetic.Wedge(
+    wedge = new Kinetic.Wedge(
       x: cx
       y: cy
       radius: R
@@ -41,20 +37,33 @@ newPaintPizza = (stage) ->
       stroke: "black"
       strokeWidth: 4
       rotationDeg: angle
-    ))
+    )
+    _paint = (w) ->
+      _ = ->
+        w.on "mousedown", ->
+          if toolbar.currentTool is "paint"
+            w.setFill(toolbar.color)
+            layer.draw()
+            console.log(toolbar.color)
+      _
+    _paint(wedge)()
+    layer.add(wedge)
+  for i in [0..6]
+    angle = i * (360/7)
     text = new Kinetic.Text(
-      x: cx + (R - 15 - 12) * Math.sin((angle + 5) / 180 * Math.PI)
-      y: cy + (R - 15 - 24)* Math.cos((angle + 5) / 180 * Math.PI)
+      x: cx + (R + 30 - 12) * Math.sin((angle + 7) / 180 * Math.PI)
+      y: cy + (R + 30 - 24)* Math.cos((angle + 7) / 180 * Math.PI)
       text: days[6-i]
       fill: "black"
-      fontSize: 22
-      rotationDeg: 360 - angle - 10
+      fontSize: 16
+      rotationDeg: 360 - angle - 14
     )
-    console.log days[i]
-    console.log text.getHeight()
-    console.log text.getWidth()
+    #text.setZIndex 100
+    #console.log days[i]
+    #console.log text.getHeight()
+    #console.log text.getWidth()
     layer.add(text)
-  layer
+  layer.draw()
 
 class Toolbar
   constructor: (options) ->
@@ -73,8 +82,9 @@ class Toolbar
     @events[evt].push(callback)
     return @this
 
-  trigger: (evt) ->
-    [callback() for callback in @events[evt]]
+  trigger: (name) ->
+    console.log("#{name} trigged")
+    [callback() for callback in @events[name]]
 
   setUpLayers: ->
     @stage.add(@background)
@@ -102,9 +112,10 @@ class Toolbar
       @brushPoint = p
       #@debug('stage-mousemove')
     ).on "mousedown", (evt) =>
-      if @currentTool is "text"
-        @textPoint = @stage.getMousePosition()
-        @trigger("textstart")
+      switch @currentTool
+        when "text"
+          @textPoint = @stage.getMousePosition()
+          @trigger("textstart")
 
     $('.save-btn').button()
     for ctrl, func of @clickEvents
@@ -119,6 +130,7 @@ class Toolbar
     ".reset-btn": "resetLayer"
     ".text-btn": "textTool"
     ".brush-btn": "brushTool"
+    ".paint-btn": "paintTool"
     ".size-group button": "changeSize"
     ".color-group button": "changeColor"
     ".save-btn": "saveImage"
@@ -202,16 +214,18 @@ $ ->
     height: 500
   )
   #pizza = newBrushPizza(stage)
-  pizza = newPaintPizza(stage)
+  pizza = new Kinetic.Layer(id: "background")
 
   toolbar = new Toolbar(
     $container: $('#pizza')
     stage: stage
     background: pizza
-    color: "black"
+    color: "white"
     fontSize: 25
     strokeWidth: 6
   )
+
+  cookPaintPizza(stage, pizza, toolbar)
 
   dialog = $('#text-dialog').on('shown', ->
     userInput.val '' 
