@@ -1,5 +1,6 @@
 #COLORS = ["#f00", "#ff0", "#0f0", "#0ff", "#00f", "#f0f", "#000", "#fff"]
 COLORS = ["1c39f6", "ff43f7", "61fbb1", "d31710", "00306f", "0086c7", "884aaa", "ff7a29", "fefa51", "00ba6d", "00bfef", "ff1f17", "000", "fff"]
+document.onselectstart = () -> false
 $ ->
   $.each COLORS, ->
     color = "##{this}"
@@ -13,7 +14,7 @@ $ ->
     height: 500
   )
   tool = ""
-  color = "#000"
+  color = "black"
 
   debug = ->
     console.log "tool: #{tool}, painting: #{painting}"
@@ -55,7 +56,9 @@ $ ->
   $('#text-btn').click ->
     tool = "text"
   $('#paint-btn').click ->
+    $('#painting').toggleClass(tool)
     tool = "paint"
+    $('#painting').addClass(tool)
 
   painting = off
   oldXY = null
