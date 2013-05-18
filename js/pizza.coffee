@@ -1,7 +1,8 @@
-COLORS = ["#f00", "#ff0", "#0f0", "#0ff", "#00f", "#f0f", "#000", "#fff"]
+#COLORS = ["#f00", "#ff0", "#0f0", "#0ff", "#00f", "#f0f", "#000", "#fff"]
+COLORS = ["1c39f6", "ff43f7", "61fbb1", "d31710", "00306f", "0086c7", "884aaa", "ff7a29", "fefa51", "00ba6d", "00bfef", "ff1f17", "000", "fff"]
 $ ->
   $.each COLORS, ->
-    color = this
+    color = "##{this}"
     a = """<button class="color btn" data-color="#{color}" style="background: #{color};"></button>"""
     $(".tools .color-group").append a
 
