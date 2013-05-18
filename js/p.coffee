@@ -67,8 +67,8 @@ class Toolbar
     @stage.on("mousemove", =>
       p = @stage.getMousePosition()
       @brush(p) if @currentTool is "brush" and @brushing and @brushPoint
-      @brushPoint = p if @brushing
-      @debug('stage-mousemove')
+      @brushPoint = p
+      #@debug('stage-mousemove')
     ).on "mousedown", (evt) =>
       if @currentTool is "text"
         @textPoint = @stage.getMousePosition()
@@ -119,6 +119,8 @@ class Toolbar
 
   brush: (p) ->
     console.log(@strokeWidth)
+    console.log(@brushPoint)
+    console.log(p)
     line = new Kinetic.Line(
       points: [@brushPoint.x, @brushPoint.y, p.x, p.y]
       stroke: @color
@@ -126,7 +128,7 @@ class Toolbar
       lineJoin: 'round'
       strokeWidth: @strokeWidth
     )
-    @stage.get('#burshLayer')[0].add(line).draw()
+    @stage.get('#brushLayer')[0].add(line).draw()
 
   paintTool: ->
     @use('paint')
