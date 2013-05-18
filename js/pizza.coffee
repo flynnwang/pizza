@@ -118,10 +118,12 @@ $ ->
       callback: (url) =>
         $('#download-btn').attr('href', url)
         $('#download-btn').attr('download', 'a.jpg')
-        $(this).hide()
+        $(this).button('reset')
         $('#download-btn').show()
         console.log url
       mimeType: "image/png"
     )
-  $('#download-btn').hide()
+  $('#download-btn').hide().click ->
+    $('#save-btn').show()
+
   $('#save-btn').button()
